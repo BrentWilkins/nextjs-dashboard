@@ -1,5 +1,6 @@
 import postgres from 'postgres';
 import {
+  CardData,
   CustomerField,
   CustomersTableType,
   InvoiceForm,
@@ -16,12 +17,12 @@ export async function fetchRevenue() {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
 
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    console.log('Fetching revenue data...');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue[]>`SELECT * FROM revenue`;
 
-    // console.log('Data fetch completed after 3 seconds.');
+    console.log('Data fetch completed after 3 seconds.');
 
     return data;
   } catch (error) {
@@ -50,7 +51,18 @@ export async function fetchLatestInvoices() {
   }
 }
 
-export async function fetchCardData() {
+/**
+ * Fetches dashboard card data including customer count, invoice count, and invoice totals.
+ *
+ * @returns {Promise<CardData>} Promise that resolves to an object containing:
+ *   - numberOfCustomers: Total number of customers
+ *   - numberOfInvoices: Total number of invoices
+ *   - totalPaidInvoices: Formatted currency string of total paid invoices
+ *   - totalPendingInvoices: Formatted currency string of total pending invoices
+ *
+ * @throws {Error} Throws error if database query fails
+ */
+export async function fetchCardData(): Promise<CardData> {
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
